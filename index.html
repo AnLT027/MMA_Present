@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechShare - 9 Core Use Cases Documentation</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+              900: '#164e63',
+            },
+            accent: {
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+            },
+            darkbg: '#0b0f17',
+            cardbg: 'rgba(17, 24, 39, 0.7)',
+            borderdark: 'rgba(255, 255, 255, 0.08)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f17;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+
+    /* Glassmorphism effects */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-header {
+      background: rgba(11, 15, 23, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glow-effect:hover {
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+    }
+
+    /* Highlight matching search terms */
+    mark.search-highlight {
+      background-color: rgba(6, 182, 212, 0.3);
+      color: #38bdf8;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    /* Flowchart Node pulse animation */
+    @keyframes pulse-border {
+      0%, 100% { border-color: rgba(6, 182, 212, 0.4); }
+      50% { border-color: rgba(99, 102, 241, 0.8); }
+    }
+    .active-flow-step {
+      animation: pulse-border 3s infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f17] text-slate-200 font-sans antialiased min-h-screen selection:bg-cyan-500 selection:text-slate-950 flex flex-col">
+
+  <!-- TOP HEADER / NAVBAR -->
+  <header class="sticky top-0 z-40 glass-header w-full px-4 lg:px-8 py-3.5 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-cubes text-lg"></i>
+        </div>
+        <div>
+          <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">TechShare</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/50 font-mono ml-2 hidden sm:inline-block">v1.0 Docs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Quick Search Bar -->
+    <div class="relative max-w-md w-full mx-4 hidden md:block">
+      <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+      </div>
+      <input type="text" id="searchInput" placeholder="Tìm kiếm file, hàm, API, usecase (e.g. loginController, JWT)..." 
+        class="w-full pl-10 pr-10 py-1.5 text-sm bg-slate-900/90 border border-slate-700/60 rounded-xl text-slate-200 placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all duration-200">
+      <button id="clearSearchBtn" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Stats Badge & Quick Actions -->
+    <div class="flex items-center space-x-3">
+      <div class="hidden lg:flex items-center space-x-2 text-xs font-mono text-slate-400 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>9 Use Cases Total</span>
+      </div>
+      <button id="expandAllBtn" title="Expand/Collapse All Steps" class="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-cyan-400 transition-colors border border-slate-700/50">
+        <i class="fa-solid fa-arrows-up-down text-sm"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE SEARCH BAR (Visible only on mobile) -->
+  <div class="p-3 bg-slate-900 border-b border-slate-800 md:hidden">
+    <div class="relative w-full">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+      </div>
+      <input type="text" id="mobileSearchInput" placeholder="Tìm kiếm nhanh..." 
+        class="w-full pl-9 pr-8 py-2 text-xs bg-slate-950 border border-slate-800 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+    </div>
+  </div>
+
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- SIDEBAR NAV (Desktop fixed left / Mobile drawer) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-72 bg-slate-950/95 lg:bg-slate-950/60 backdrop-blur-xl border-r border-slate-800/80 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col pt-16 lg:pt-0">
+      
+      <!-- Sidebar Header / Category Filter -->
+      <div class="p-4 border-b border-slate-800/80">
+        <p class="text-xs uppercase font-mono font-semibold tracking-wider text-slate-400 mb-2">Phân loại Modules</p>
+        <div class="flex flex-wrap gap-1.5" id="categoryFilterContainer">
+          <button data-filter="all" class="cat-filter-btn px-2.5 py-1 text-xs rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-medium transition">Tất cả (9)</button>
+          <button data-filter="auth" class="cat-filter-btn px-2.5 py-1 text-xs rounded-md bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800 font-medium transition">Auth (4)</button>
+          <button data-filter="user" class="cat-filter-btn px-2.5 py-1 text-xs rounded-md bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800 font-medium transition">User/Admin (2)</button>
+          <button data-filter="ekyc" class="cat-filter-btn px-2.5 py-1 text-xs rounded-md bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800 font-medium transition">eKYC (2)</button>
+        </div>
+      </div>
+
+      <!-- Use Cases Navigation Menu -->
+      <nav class="flex-1 overflow-y-auto p-3 space-y-1" id="navMenuList">
+        <!-- Javascript renders item menu dynamically -->
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="p-3.5 border-t border-slate-800/80 bg-slate-900/40 text-xs text-slate-500 flex items-center justify-between">
+        <span>TechShare Architecture</span>
+        <span class="font-mono text-cyan-500">React Native / Node.js</span>
+      </div>
+    </aside>
+
+    <!-- BACKDROP FOR MOBILE SIDEBAR -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-20 hidden lg:hidden"></div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto lg:ml-72 p-4 sm:p-6 lg:p-8 space-y-10 scroll-pt-20">
+
+      <!-- HERO BANNER -->
+      <section class="glass-panel rounded-2xl p-6 lg:p-8 relative overflow-hidden border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-cyan-950/30">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-4xl space-y-3">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-300 text-xs font-mono">
+            <i class="fa-solid fa-microchip"></i>
+            <span>Architecture & Workflow Specifications</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+            Đặc tả Chi tiết 9 Use Case Cốt Lõi <span class="text-cyan-400">(TechShare System)</span>
+          </h1>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Báo cáo hệ thống hóa dễ hiểu theo chuẩn văn phong báo cáo chuyên sâu. Cung cấp chi tiết mục đích, các file source code liên quan (Client/Server), danh sách các hàm chính, các service tích hợp, sơ đồ luồng gọi hàm tương tác và quy trình hoạt động step-by-step từ giao diện đến Backend DB.
+          </p>
+        </div>
+      </section>
+
+      <!-- USE CASES CONTAINER (RENDERED VIA JS) -->
+      <div id="usecaseContainer" class="space-y-12">
+        <!-- Contents populated dynamically by JS for maintainability & searching -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- GLOBAL NOTIFICATION TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center space-x-2 bg-slate-900 border border-cyan-500 text-cyan-300 px-4 py-3 rounded-xl shadow-2xl">
+    <i class="fa-solid fa-circle-check text-cyan-400"></i>
+    <span id="toastMsg" class="text-sm font-medium">Đã chép nội dung vào Clipboard!</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & DATA -->
+  <script>
+    // -------------------------------------------------------------
+    // DATA SOURCE FOR 9 USE CASES
+    // -------------------------------------------------------------
+    const useCasesData = [
+      {
+        id: "uc1",
+        code: "UC-01",
+        category: "auth",
+        title: "Login (Đăng nhập người dùng)",
+        subtitle: "Đăng nhập Renter/Owner, cấp JWT 7 ngày, mở Socket.IO & tải thông báo/wishlist",
+        purpose: "Dùng để người dùng (Renter hoặc Owner) đăng nhập vào ứng dụng bằng tên đăng nhập (username) hoặc email và mật khẩu. Khi đăng nhập thành công, hệ thống cấp JWT token có hạn 7 ngày, mở kết nối thời gian thực (Socket.IO), tải sẵn dữ liệu cá nhân (thông báo, wishlist) và tự động đưa người dùng vào đúng giao diện theo vai trò của họ. Nếu tài khoản đang bị Admin khóa, hệ thống sẽ chặn đăng nhập và hiện thông báo lý do khóa.",
+        files: {
+          client: [
+            "client/src/screens/auth/LoginScreen.tsx",
+            "client/src/services/loginService.ts",
+            "client/src/config/api.ts",
+            "client/src/store/slices/authSlice.ts",
+            "client/src/services/socketService.ts",
+            "client/src/services/firebaseMessagingService.ts",
+            "client/src/services/notificationService.ts",
+            "client/src/navigation/RootNavigator.tsx",
+            "client/src/components/common/ActionFeedbackModals.tsx",
+            "client/src/constants/strings.ts"
+          ],
+          server: [
+            "server/src/app.js",
+            "server/src/routes/loginRoutes.js",
+            "server/src/routes/authRoutes.js",
+            "server/src/controllers/loginController.js",
+            "server/src/controllers/authController.js",
+            "server/src/models/Account.js",
+            "server/src/models/User.js",
+            "server/src/models/Role.js",
+            "server/src/models/EkycRequest.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "LoginScreen", desc: "Component hiển thị giao diện đăng nhập." },
+            { name: "handleLogin()", desc: "Hàm chạy khi người dùng bấm nút Log In." },
+            { name: "validateLoginForm()", desc: "Kiểm tra xem người dùng đã nhập đủ tài khoản và mật khẩu từ 6 ký tự trở lên chưa." },
+            { name: "loginWithCredentials()", desc: "Gửi request đăng nhập lên server." },
+            { name: "setAuth()", desc: "Reducer của Redux lưu token và user, bật isAuthenticated = true." },
+            { name: "executeRedirect()", desc: "Trong RootNavigator: Tự động reset luồng màn hình sang giao diện chính khi đăng nhập thành công." }
+          ],
+          server: [
+            { name: "login()", desc: "Trong loginController.js: Hàm điều phối toàn bộ 10 bước kiểm tra đăng nhập và trả JWT về cho app." },
+            { name: "resolveRoleCode()", desc: "Đọc mã quyền (renter, owner hoặc admin) từ account.roleId." },
+            { name: "syncUserProfile()", desc: "Tìm hồ sơ User gắn với Account (nếu thiếu thì tự tạo mới và đồng bộ lại role)." },
+            { name: "syncEkycStatus()", desc: "Kiểm tra bảng ekyc_requests xem user đã được duyệt eKYC chưa để đồng bộ đúng trường isVerified." }
+          ]
+        },
+        services: [
+          { name: "loginService", file: "client/src/services/loginService.ts", desc: "Cung cấp loginService.validate() và loginService.login()." },
+          { name: "apiClient / setAuthToken", file: "client/src/config/api.ts", desc: "Quản lý kết nối HTTP và tự động đính kèm Authorization: Bearer <token>." },
+          { name: "socketService", file: "client/src/services/socketService.ts", desc: "Gọi socketService.connect(userId) để tham gia kênh thời gian thực của user." },
+          { name: "firebaseMessagingService & notificationService", file: "client/src/services/", desc: "Khởi tạo push notification (init(uid)) và lấy số thông báo chưa đọc (fetchUnreadCount(uid))." }
+        ],
+        interactions: [
+          "Khi người dùng bấm nút đăng nhập trên LoginScreen, ứng dụng sẽ gọi hàm handleLogin().",
+          "Bên trong handleLogin(), đầu tiên nó gọi loginService.validate({ identifier, password }) để kiểm tra dữ liệu ngay trên máy (chưa tốn mạng).",
+          "Nếu hợp lệ, handleLogin() gọi tiếp loginService.login(...) (tức hàm loginWithCredentials()), hàm này dùng apiClient.post('/login', ...) để bắn request POST /api/login lên Backend.",
+          "Tại Backend, router trong loginRoutes.js chuyển request cho hàm login() trong loginController.js xử lý: Hàm login() tìm bản ghi trong Account (có lấy thêm passwordHash và populate roleId), dùng bcrypt.compare() so khớp mật khẩu.",
+          "Nếu account.isActive === false, hàm login() trả lỗi 403 với mã ACCOUNT_LOCKED và lockReason. Lúc này handleLogin() ở Client bắt được lỗi, ẩn bàn phím và bật ActionResultModal báo tài khoản bị khóa.",
+          "Nếu tài khoản hợp lệ, hàm login() lần lượt gọi 3 hàm nội bộ: resolveRoleCode() lấy role -> syncUserProfile() lấy/đồng bộ hồ sơ User -> syncEkycStatus() đồng bộ trạng thái eKYC -> cập nhật lastLogin -> dùng jwt.sign() ký token 7 ngày rồi trả về { success: true, token, user }.",
+          "Nhận được kết quả thành công, handleLogin() gọi setAuthToken(data.token) để gắn token vào Axios, gọi socketService.connect(userId) để kết nối Socket, và gọi dispatch(setAuth({ token, user })) để lưu vào Redux.",
+          "Khi Redux thay đổi từ chưa đăng nhập sang đã đăng nhập, RootNavigator tự động chạy 2 useEffect: một cái khởi tạo socketService.onAccountLocked, socketService.onRoleUpdated, firebaseMessagingService.init(uid), notificationService.fetchUnreadCount(uid), dispatch(fetchWishlist()); cái còn lại chạy executeRedirect() chuyển người dùng vào màn Home (nếu là renter) hoặc Owner (nếu là owner)."
+        ],
+        steps: [
+          "Người dùng mở màn hình Đăng nhập, nhập Username/Email và Password, sau đó bấm nút Log In.",
+          "Hàm handleLogin() gọi loginService.validate() kiểm tra rỗng và độ dài mật khẩu (>= 6 ký tự). Nếu sai, màn hình hiện banner thông báo lỗi màu đỏ ngay trên form và dừng lại.",
+          "Nếu đúng định dạng, app bật trạng thái loading và gọi POST /api/login thông qua loginService.login().",
+          "Server tìm tài khoản trong collection accounts và kiểm tra mật khẩu bằng bcrypt.compare(). Nếu sai tài khoản hoặc mật khẩu, server trả mã 401 và app hiện lỗi 'Tài khoản hoặc mật khẩu không chính xác.'.",
+          "Nếu tài khoản đúng mật khẩu nhưng account.isActive === false, server trả mã 403 (ACCOUNT_LOCKED), app hiện popup ActionResultModal màu đỏ báo lý do bị Admin khóa.",
+          "Nếu tài khoản bình thường, server đồng bộ hồ sơ User, đồng bộ trạng thái eKYC, cập nhật thời gian lastLogin, tạo JWT token hạn 7 ngày và trả về kèm thông tin user (name, role, avatar, isVerified, rating, totalReviews, trust, trustScore, walletBalance).",
+          "App lưu token, mở Socket.IO, lưu Redux và RootNavigator tự động chuyển người dùng vào trang chủ Home (Renter) hoặc Owner Dashboard (Owner)."
+        ]
+      },
+      {
+        id: "uc2",
+        code: "UC-02",
+        category: "auth",
+        title: "Register (Đăng ký tài khoản mới)",
+        subtitle: "Tạo tài khoản Renter 2 bước qua OTP Gmail & tự động đăng nhập",
+        purpose: "Dùng để khách chưa có tài khoản tự tạo một tài khoản Renter mới an toàn theo quy trình 2 bước: nhập thông tin cá nhân -> nhận mã xác thực OTP 6 chữ số qua Gmail -> nhập mã OTP để hệ thống chính thức tạo Account và User, đồng thời đăng nhập luôn sau khi tạo xong.",
+        files: {
+          client: [
+            "client/src/screens/auth/RegisterScreen.tsx",
+            "client/src/services/registerService.ts",
+            "client/src/config/api.ts",
+            "client/src/store/slices/authSlice.ts",
+            "client/src/services/socketService.ts",
+            "client/src/navigation/RootNavigator.tsx"
+          ],
+          server: [
+            "server/src/routes/registerRoutes.js",
+            "server/src/middlewares/registerMiddleware.js",
+            "server/src/controllers/registerController.js",
+            "server/src/services/emailService.js",
+            "server/src/models/Otp.js",
+            "server/src/models/Account.js",
+            "server/src/models/User.js",
+            "server/src/models/Role.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "RegisterScreen", desc: "Component quản lý 2 bước 'form' và 'otp', cùng bộ đếm ngược 60s (countdown)." },
+            { name: "handleSendOtp()", desc: "Chạy khi người dùng bấm nút gửi đăng ký ở Bước 1." },
+            { name: "handleVerifyOtp()", desc: "Chạy khi người dùng nhập xong 6 số OTP và bấm xác nhận ở Bước 2." },
+            { name: "handleResendOtp()", desc: "Chạy khi người dùng bấm gửi lại OTP sau khi hết 60 giây." },
+            { name: "validateRegisterForm(), sendOtp(), verifyOtp(), resendOtp()", desc: "Các hàm helper trong registerService.ts." }
+          ],
+          server: [
+            { name: "validateSendOtpInput() & validateVerifyOtpInput()", desc: "Trong registerMiddleware.js: Middleware kiểm tra regex username, email, phone, mật khẩu và mã OTP 6 số." },
+            { name: "sendRegisterOtp()", desc: "Trong registerController.js: Kiểm tra trùng username/email/phone, băm mật khẩu, lưu OTP tạm và gửi mail." },
+            { name: "verifyRegisterOtp()", desc: "Trong registerController.js: Kiểm tra OTP đúng, tạo Account + User + gán role renter, xóa OTP và trả JWT." },
+            { name: "resendRegisterOtp()", desc: "Trong registerController.js: Sinh mã OTP mới và gửi lại mail." },
+            { name: "sendRegistrationOtpEmail()", desc: "Trong emailService.js: Gửi mail OTP bằng Nodemailer." }
+          ]
+        },
+        services: [
+          { name: "registerService", file: "client/src/services/registerService.ts", desc: "Cung cấp validate(), sendOtp(), verifyOtp(), resendOtp()." },
+          { name: "emailService", file: "server/src/services/emailService.js", desc: "getTransporter(), sendRegistrationOtpEmail() (dùng EMAIL_USER và EMAIL_PASS trong server/.env)." },
+          { name: "socketService & apiClient / setAuthToken", file: "client/src/services/", desc: "Thiết lập phiên đăng nhập thời gian thực sau khi tạo tài khoản xong." }
+        ],
+        interactions: [
+          "Ở Bước 1, khi người dùng điền xong form và bấm tiếp tục, RegisterScreen gọi handleSendOtp(). Hàm này gọi registerService.validate() kiểm tra toàn bộ các trường (username, name, email, phone, password, confirmPassword).",
+          "Nếu hợp lệ, handleSendOtp() gọi registerService.sendOtp(), gửi request tới POST /api/register/send-otp.",
+          "Request đi qua middleware validateSendOtpInput(), rồi tới registerController.sendRegisterOtp(). Hàm này kiểm tra trong MongoDB xem username/email (trong Account) hoặc phone (trong User) đã tồn tại chưa, băm mật khẩu bằng bcrypt.hash(password, 10), tạo OTP 6 số, lưu tạm vào Otp và gọi emailService.sendRegistrationOtpEmail() gửi email.",
+          "Nhận kết quả success: true, RegisterScreen chuyển state step sang 'otp' và bắt đầu đếm ngược 60 giây. Nếu người dùng bấm gửi lại, handleResendOtp() gọi registerService.resendOtp() -> resendRegisterOtp() cập nhật lại OTP mới trong bảng otps và gọi lại sendRegistrationOtpEmail().",
+          "Ở Bước 2, người dùng nhập 6 số OTP và bấm xác nhận -> handleVerifyOtp() gọi registerService.verifyOtp() -> đi qua validateVerifyOtpInput() -> vào verifyRegisterOtp(). Hàm này tìm bản ghi Otp, kiểm tra trùng lặp lần cuối, tìm hoặc tạo role 'renter', tạo mới document trong Account và User (mặc định isVerified: false, trust.score: 100, rating: 5.0, totalReviews: 0), xóa Otp và ký JWT trả về Client.",
+          "Cuối cùng handleVerifyOtp() gọi setAuthToken(data.token), socketService.connect(userId) và dispatch(setAuth(...)), chuyển thẳng vào Home."
+        ],
+        steps: [
+          "Người dùng mở màn hình Register, nhập Username, Họ tên, Email, Số điện thoại, Mật khẩu và Xác nhận mật khẩu rồi bấm nút đăng ký.",
+          "App kiểm tra hợp lệ ở Client; nếu thiếu hoặc sai định dạng (VD: mật khẩu không khớp), app báo lỗi ngay trên form.",
+          "App gửi POST /api/register/send-otp. Server kiểm tra trùng Username, Email, Số điện thoại; nếu trùng thì trả về 400 kèm thông báo cụ thể.",
+          "Nếu chưa trùng, server mã hóa mật khẩu tạm vào collection otps (tự động hết hạn sau 10 phút), sinh OTP 6 chữ số và gửi qua Gmail cho người dùng.",
+          "Màn hình chuyển sang bước nhập OTP và đếm ngược 60 giây. Nếu chưa nhận được mã sau 60s, người dùng có thể bấm Gửi lại OTP.",
+          "Người dùng nhập đúng 6 số OTP và bấm xác nhận. App gửi POST /api/register/verify-otp.",
+          "Server tạo chính thức bản ghi trong accounts (role renter) và users, xóa OTP tạm, tạo JWT token trả về; Client tự động đăng nhập và đưa người dùng vào trang chủ Home."
+        ]
+      },
+      {
+        id: "uc3",
+        code: "UC-03",
+        category: "auth",
+        title: "ForgotPassword (Quên mật khẩu & Đặt lại mật khẩu)",
+        subtitle: "Khôi phục mật khẩu 3 bước: Tìm tài khoản -> Xác thực OTP -> Đặt lại MK mới",
+        purpose: "Giúp người dùng khôi phục mật khẩu khi bị quên theo quy trình bảo mật 3 bước: tìm tài khoản bằng username hoặc email -> nhận và xác thực mã OTP 6 chữ số qua email để đổi lấy token 1 lần (resetToken) -> tạo mật khẩu mới.",
+        files: {
+          client: [
+            "client/src/screens/auth/ForgotPasswordScreen.tsx",
+            "client/src/services/forgotService.ts",
+            "client/src/constants/strings.ts"
+          ],
+          server: [
+            "server/src/routes/forgotRoutes.js",
+            "server/src/controllers/forgotController.js",
+            "server/src/services/emailService.js",
+            "server/src/models/ForgotOtp.js",
+            "server/src/models/Account.js",
+            "server/src/models/User.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "ForgotPasswordScreen", desc: "Component chính quản lý currentStep (find_account -> verify_otp -> reset_password -> success)." },
+            { name: "handleSendOtp(), handleVerifyOtp(), handleResendOtp(), handleResetPassword()", desc: "Các handler điều phối qua 3 bước khôi phục." },
+            { name: "validateStep1(), validateStep2(), validateStep3()", desc: "Kiểm tra dữ liệu nhập trước khi gọi API." },
+            { name: "sendOtp(), verifyOtp(), resetPassword(), resendOtp()", desc: "Các service gọi API tới /api/forgot-password/* trong forgotService.ts." }
+          ],
+          server: [
+            { name: "maskEmail()", desc: "Che bớt ký tự email trước khi trả về hiển thị cho an toàn (VD: ph***5@gmail.com)." },
+            { name: "findAccountAndSendOtp()", desc: "Tìm tài khoản, kiểm tra bị khóa, tạo OTP 6 số và gửi email." },
+            { name: "verifyOtp()", desc: "Xác thực OTP, sinh resetToken 1 lần bằng crypto.randomBytes(32)." },
+            { name: "resetPassword()", desc: "Xác thực resetToken, băm mật khẩu mới bằng bcrypt và cập nhật Account." },
+            { name: "sendForgotPasswordOtpEmail()", desc: "Trong emailService.js: Gửi mail OTP khôi phục." }
+          ]
+        },
+        services: [
+          { name: "forgotService", file: "client/src/services/forgotService.ts", desc: "Đóng gói validateStep1/2/3 và gọi HTTP API qua apiClient." },
+          { name: "emailService", file: "server/src/services/emailService.js", desc: "Gửi email OTP bảo mật (sendForgotPasswordOtpEmail)." }
+        ],
+        interactions: [
+          "Từ LoginScreen, người dùng bấm Forgot Password để chuyển sang ForgotPasswordScreen.",
+          "Bước 1: Người dùng nhập username hoặc email và bấm tiếp tục -> handleSendOtp() gọi forgotService.validateStep1() -> hợp lệ thì gọi forgotService.sendOtp() -> gọi forgotController.findAccountAndSendOtp(). Hàm này tìm Account, kiểm tra nếu bị khóa (isActive === false) thì trả 403, xóa OTP cũ trong ForgotOtp, tạo OTP 6 số mới, gọi emailService.sendForgotPasswordOtpEmail() và trả về maskedEmail để app chuyển sang bước verify_otp.",
+          "Bước 2: Người dùng nhập 6 số OTP -> handleVerifyOtp() gọi forgotService.validateStep2() -> gọi forgotService.verifyOtp() -> vào forgotController.verifyOtp(). Nếu OTP khớp, server dùng crypto.randomBytes(32).toString('hex') sinh ra một resetToken dùng 1 lần, đánh dấu isVerified = true trong ForgotOtp và trả resetToken về cho app để chuyển sang bước reset_password. (Nếu quá 60s chưa nhận được mã, handleResendOtp() gọi forgotService.resendOtp() -> forgotController.resendOtp() để gửi mã mới).",
+          "Bước 3: Người dùng nhập mật khẩu mới và xác nhận -> handleResetPassword() gọi forgotService.validateStep3() -> gọi forgotService.resetPassword() -> vào forgotController.resetPassword(). Server tìm bản ghi ForgotOtp khớp cả email, resetToken và isVerified: true, băm mật khẩu bằng bcrypt.hash(newPassword, 10), lưu đè passwordHash vào Account bằng Account.findByIdAndUpdate, rồi chạy ForgotOtp.deleteMany() để hủy token vĩnh viễn và báo thành công."
+        ],
+        steps: [
+          "Người dùng bấm Forgot Password trên màn Đăng nhập, nhập Username hoặc Email ở Bước 1.",
+          "Client kiểm tra tối thiểu 3 ký tự rồi gửi POST /api/forgot-password/send-otp.",
+          "Server tìm tài khoản; nếu không có trả 404; nếu tài khoản đang bị khóa (isActive === false) trả 403 từ chối; nếu hợp lệ thì gửi email OTP 6 số và trả về email đã che ký tự.",
+          "Người dùng mở email lấy mã 6 số nhập vào Bước 2 (có thể bấm gửi lại OTP sau 60 giây). App gửi POST /api/forgot-password/verify-otp và nhận lại resetToken.",
+          "Màn hình chuyển sang Bước 3, người dùng nhập mật khẩu mới (ít nhất 6 ký tự) và nhập lại mật khẩu xác nhận.",
+          "App gửi POST /api/forgot-password/reset-password kèm resetToken. Server băm mật khẩu mới cập nhật vào accounts, xóa các OTP cũ và trả về thành công. Màn hình chuyển sang thông báo hoàn tất kèm nút quay về Login."
+        ]
+      },
+      {
+        id: "uc4",
+        code: "UC-04",
+        category: "auth",
+        title: "Admin Login (Đăng nhập Quản trị viên)",
+        subtitle: "Xác thực vai trò Admin, tự động bật isVerified & điều hướng AdminDrawerNavigator",
+        purpose: "Cho phép tài khoản có quyền admin đăng nhập từ cùng màn hình LoginScreen, được Backend tự động xác nhận quyền quản trị và trạng thái isVerified: true, sau đó RootNavigator điều hướng vào không gian quản trị riêng (AdminDrawerNavigator) thay vì giao diện người thuê, đồng thời bảo vệ tất cả các API quản trị bằng lớp kiểm tra quyền Admin.",
+        files: {
+          client: [
+            "client/src/screens/auth/LoginScreen.tsx",
+            "client/src/services/loginService.ts",
+            "client/src/navigation/RootNavigator.tsx",
+            "client/src/navigation/AdminDrawerNavigator.tsx",
+            "client/src/navigation/AdminSidebarContent.tsx",
+            "client/src/screens/admin/AdminDashboardScreen.tsx"
+          ],
+          server: [
+            "server/src/controllers/loginController.js",
+            "server/src/middlewares/authMiddleware.js",
+            "server/src/middlewares/adminMiddleware.js",
+            "server/src/routes/adminRoutes.js",
+            "server/src/routes/userManagementRoutes.js",
+            "server/src/models/Account.js",
+            "server/src/models/Role.js",
+            "server/src/models/User.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "LoginScreen.handleLogin()", desc: "Gọi onLoginSuccess(role) truyền vai trò 'admin' ra ngoài khi đăng nhập thành công." },
+            { name: "RootNavigator.getInitialRoute() & executeRedirect()", desc: "Chọn route 'Admin' khi user?.role === 'admin'." },
+            { name: "AdminSidebarContent", desc: "Chứa handleNavigate() và handleSignOut() dành cho Admin." }
+          ],
+          server: [
+            { name: "login() trong loginController.js", desc: "Điều phối logic login, tự động bật isVerified: true cho roleCode === 'admin'." },
+            { name: "resolveRoleCode(), syncUserProfile(), syncEkycStatus()", desc: "Các helper đồng bộ thông tin Admin." },
+            { name: "requireAuth() trong authMiddleware.js", desc: "Kiểm tra JWT token hợp lệ và tài khoản không bị khóa." },
+            { name: "adminMiddleware() trong adminMiddleware.js", desc: "Bảo vệ endpoint, chỉ cho phép role === 'admin'." }
+          ]
+        },
+        services: [
+          { name: "loginService", file: "client/src/services/loginService.ts", desc: "Xử lý đăng nhập tương tự user thông thường." },
+          { name: "Admin Core Services", file: "client/src/services/", desc: "adminService, userManagementService, ekycService, logoutService (confirmAndLogout), socketService." }
+        ],
+        interactions: [
+          "Admin nhập tài khoản tại LoginScreen -> bấm nút đăng nhập -> handleLogin() gọi loginService.login() -> gửi POST /api/login vào loginController.login().",
+          "loginController.login() kiểm tra mật khẩu bằng bcrypt.compare(), rồi gọi resolveRoleCode() đọc từ bảng roles thấy code === 'admin'.",
+          "Tiếp theo, syncUserProfile() và syncEkycStatus() kiểm tra nếu roleCode === 'admin' thì tự động bật isVerified = true và 'trust.isVerified': true trên User (Admin không cần nộp đơn eKYC). Sau đó server ký JWT có role: 'admin' và trả về Client.",
+          "Tại Client, handleLogin() gọi setAuthToken(), kết nối Socket và dispatch(setAuth). Khi Redux cập nhật user.role = 'admin', RootNavigator chạy executeRedirect() để navigationRef.reset thẳng tới route 'Admin' (AdminDrawerNavigator), mở màn AdminDashboardScreen.",
+          "Từ đây, mọi thao tác Admin gọi API (như /api/admin/*, /api/user-management/*) đều phải đi qua requireAuth (kiểm tra JWT hợp lệ, tài khoản không bị khóa) rồi đi qua adminMiddleware (nếu role !== 'admin' lập tức trả lỗi 403 FORBIDDEN_ADMIN_ONLY)."
+        ],
+        steps: [
+          "Admin mở màn LoginScreen, nhập tài khoản Admin và mật khẩu, bấm Log In.",
+          "Server xác thực thông tin trong accounts và roles, nhận diện roleCode = 'admin', tự động đồng bộ isVerified = true trên users và phát hành JWT token chứa role: 'admin'.",
+          "App lưu token vào apiClient, cập nhật Redux Store và kết nối Socket.IO.",
+          "RootNavigator tự động chuyển hướng sang AdminDrawerNavigator với màn hình đầu tiên là AdminDashboardScreen.",
+          "Admin mở thanh menu trái (AdminSidebarContent) để chuyển qua các trang quản lý người dùng, kiểm duyệt thiết bị, duyệt eKYC hoặc xem Profile cá nhân; mọi API quản trị đều được requireAuth + adminMiddleware bảo vệ."
+        ]
+      },
+      {
+        id: "uc5",
+        code: "UC-05",
+        category: "user",
+        title: "Profile User (Xem & Chỉnh sửa Hồ sơ cá nhân)",
+        subtitle: "Xem Rating, Trust Score, cập nhật địa chỉ/thông tin & hỗ trợ GuestPromptView",
+        purpose: "Hiển thị và cho phép người dùng quản lý thông tin hồ sơ cá nhân: Avatar, Tên, Điểm đánh giá (Rating) kèm số lượt review, Trust Score tải từ collection users, SĐT, Email, Địa chỉ, trạng thái eKYC Renter / nâng cấp Owner, nút mở Wishlist và nút Đăng xuất. Nếu tài khoản chưa có review nào (totalReviews === 0), cả phần Rating và Trust Score đều hiển thị trạng thái chưa có bằng tiếng Anh ('No rating yet' và 'No trust score yet'). Nếu người dùng chưa đăng nhập (Guest), màn hình tự động hiện giao diện yêu cầu đăng nhập đồng bộ (GuestPromptView).",
+        files: {
+          client: [
+            "client/src/navigation/HomeRoute.tsx",
+            "client/src/screens/user/ProfileScreen.tsx",
+            "client/src/components/common/GuestPromptView.tsx",
+            "client/src/components/common/ActionFeedbackModals.tsx",
+            "client/src/components/common/LogoutConfirmModal.tsx",
+            "client/src/services/userService.ts",
+            "client/src/services/ekycService.ts",
+            "client/src/services/cloudinaryUploadService.ts",
+            "client/src/services/logoutService.ts",
+            "client/src/store/slices/authSlice.ts",
+            "client/src/constants/strings.ts",
+            "client/src/types/index.ts"
+          ],
+          server: [
+            "server/src/routes/authRoutes.js",
+            "server/src/middlewares/authMiddleware.js",
+            "server/src/controllers/authController.js",
+            "server/src/controllers/loginController.js",
+            "server/src/controllers/registerController.js",
+            "server/src/models/User.js",
+            "server/src/models/Account.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "fetchFreshProfile()", desc: "Tự động chạy khi vào màn hình hoặc kéo refresh để tải dữ liệu mới nhất từ DB." },
+            { name: "onRefresh()", desc: "Kéo xuống để tải lại hồ sơ." },
+            { name: "openEditModal()", desc: "Mở modal chỉnh sửa với dữ liệu hiện tại của profile." },
+            { name: "handleSaveProfile()", desc: "Kiểm tra tên không rỗng và gửi API lưu thông tin." },
+            { name: "navigateWithAddressCheck()", desc: "Kiểm tra người dùng đã có địa chỉ chưa trước khi cho phép mở màn eKYC." },
+            { name: "handleConfirmAddressPrompt()", desc: "Khi người dùng đồng ý cập nhật địa chỉ, đóng modal nhắc và tự mở openEditModal()." },
+            { name: "GuestPromptView", desc: "Hiển thị giao diện Guest khi !isAuthenticated." }
+          ],
+          server: [
+            { name: "getMe() trong authController.js", desc: "Đồng bộ trạng thái isVerified mới nhất từ EkycRequest và trả nguyên object User cùng Account." },
+            { name: "updateMe() trong authController.js", desc: "Cập nhật name, phone, address, avatar, pushConfig.biometricEnabled qua User.findByIdAndUpdate." }
+          ]
+        },
+        services: [
+          { name: "userService", file: "client/src/services/userService.ts", desc: "getProfile() (GET /api/auth/me) và updateProfile() (PUT /api/auth/me)." },
+          { name: "ekycService", file: "client/src/services/ekycService.ts", desc: "getEkycStatus() lấy trạng thái xác thực eKYC Renter và đơn nâng cấp Owner." },
+          { name: "cloudinaryUploadService", file: "client/src/services/cloudinaryUploadService.ts", desc: "preloadCloudinaryConfig() và optimizeCloudinaryUrl() tối ưu ảnh avatar." },
+          { name: "logoutService", file: "client/src/services/logoutService.ts", desc: "confirmAndLogout() mở LogoutConfirmModal toàn cục để đăng xuất an toàn." }
+        ],
+        interactions: [
+          "Khi người dùng mở tab Profile: ProfileScreen kiểm tra isAuthenticated. Nếu false, render ngay GuestPromptView. Nếu true, useFocusEffect kích hoạt fetchFreshProfile().",
+          "Trong fetchFreshProfile(), app gọi song song preloadCloudinaryConfig(), userService.getProfile() (GET /api/auth/me -> requireAuth -> authController.getMe) và getEkycStatus(). Dữ liệu data.user trả về từ MongoDB (rating, totalReviews, trust.score, trustScore) được lưu vào state profile và đồng bộ lên Redux qua dispatch(updateUser(...)).",
+          "Để hiển thị Rating và Trust Score: ProfileScreen kiểm tra reviewCount = Number(profile.totalReviews ?? profile.totalReview ?? 0). Nếu reviewCount > 0, UI hiển thị ★ <rating> kèm (<count> reviews) và Trust Score: <score>. Ngược lại (reviewCount === 0), cả hai ô pill đều hiển thị chữ tiếng Anh 'No rating yet' và 'No trust score yet'.",
+          "Khi người dùng bấm Edit Profile (openEditModal), sửa thông tin rồi bấm Save Changes -> hàm handleSaveProfile() kiểm tra editName -> gọi userService.updateProfile() -> gửi PUT /api/auth/me vào authController.updateMe() -> cập nhật collection users -> đóng Edit Modal -> đợi 180ms rồi bật ActionResultModal hiển thị tóm tắt các trường vừa lưu.",
+          "Khi người dùng bấm mục xác thực danh tính hoặc nâng cấp Owner -> navigateWithAddressCheck() kiểm tra displayAddress. Nếu trống, app mở ActionConfirmModal nhắc cập nhật địa chỉ; bấm Update Now thì handleConfirmAddressPrompt() mở thẳng modal Edit Profile; nếu đã có địa chỉ thì điều hướng tới EkycVerification hoặc OwnerEkycVerification.",
+          "Khi bấm Log Out -> handleSignOut() gọi confirmAndLogout() -> mở LogoutConfirmModal -> xác nhận sẽ gọi logoutUser() gửi POST /api/logout rồi gọi clearLocalSession(dispatch)."
+        ],
+        steps: [
+          "Người dùng chuyển vào tab Profile. Nếu chưa đăng nhập, màn hình hiện GuestPromptView với nút Log In / Sign Up để tới màn đăng nhập.",
+          "Nếu đã đăng nhập, màn hình tự gọi GET /api/auth/me và GET /api/ekyc/status để lấy dữ liệu mới nhất từ collection users (bao gồm rating, totalReviews, trust.score, thông tin liên hệ và trạng thái eKYC).",
+          "Dưới tên người dùng hiển thị 2 nhãn: nếu đã có review thì hiện số sao + số lượt review và Trust Score: <số điểm>; nếu chưa có review nào (0) thì hiện 'No rating yet' và 'No trust score yet'.",
+          "Người dùng có thể chỉnh sửa tên/SĐT/địa chỉ trong Edit Profile Modal (lưu xuống DB qua PUT /api/auth/me), đi tới Wishlist, bấm xác thực eKYC (nếu thiếu địa chỉ hệ thống sẽ hỏi cập nhật địa chỉ trước), hoặc bấm Log Out để thoát tài khoản."
+        ]
+      },
+      {
+        id: "uc6",
+        code: "UC-06",
+        category: "ekyc",
+        title: "eKYC for Renter (Định danh người thuê thiết bị)",
+        subtitle: "Xác thực CCCD 2 mặt cho Renter, bắt buộc trước khi tạo đơn booking & Admin xét duyệt",
+        purpose: "Xác minh danh tính thật của người thuê (bắt buộc có địa chỉ liên hệ, số CCCD 9–12 chữ số, ảnh mặt trước và mặt sau CCCD) trước khi được phép thuê thiết bị. Nếu Renter chưa xác thực mà bấm đặt thuê đơn hàng, hệ thống sẽ chặn lại và hiện modal yêu cầu hoàn tất eKYC. Sau khi người dùng nộp hồ sơ, Admin sẽ kiểm tra ảnh giấy tờ trên trang quản trị để Phê duyệt hoặc Từ chối (kèm lý do).",
+        files: {
+          client: [
+            "client/src/screens/booking/BookingCreateScreen.tsx",
+            "client/src/screens/user/EkycVerificationScreen.tsx",
+            "client/src/components/ekyc/EkycSharedSections.tsx",
+            "client/src/components/ekyc/EkycFeedbackModals.tsx",
+            "client/src/screens/admin/AdminEkycListScreen.tsx",
+            "client/src/services/ekycService.ts",
+            "client/src/services/cloudinaryUploadService.ts",
+            "client/src/services/userService.ts"
+          ],
+          server: [
+            "server/src/controllers/bookingController.js",
+            "server/src/routes/ekycRoutes.js",
+            "server/src/routes/adminRoutes.js",
+            "server/src/controllers/ekycController.js",
+            "server/src/middlewares/uploadMiddleware.js",
+            "server/src/utils/cloudinary.js",
+            "server/src/models/EkycRequest.js",
+            "server/src/models/User.js",
+            "server/src/services/notificationService.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "BookingCreateScreen.handleConfirm()", desc: "Kiểm tra !currentUser.isVerified khi đặt đơn để mở ActionConfirmModal yêu cầu eKYC." },
+            { name: "EkycVerificationScreen.handleSubmit()", desc: "Kiểm tra địa chỉ, số CCCD 9–12 chữ số và đủ 2 ảnh CCCD trước khi mở modal nộp." },
+            { name: "uploadSlotBackground()", desc: "Tải ngầm ảnh CCCD lên Cloudinary CDN ngay khi vừa chọn/chụp." },
+            { name: "AdminEkycListScreen", desc: "Xem danh sách đơn eKYC, phóng to ảnh CCCD và bấm Approve/Reject." }
+          ],
+          server: [
+            { name: "bookingController.createBooking()", desc: "Chặn phía server trả 403 RENTER_EKYC_REQUIRED nếu user chưa được duyệt eKYC." },
+            { name: "getMyEkycStatus()", desc: "Lấy trạng thái xác thực eKYC hiện tại của Renter." },
+            { name: "submitEkycRequest()", desc: "Lưu đơn eKYC vào collection ekyc_requests với status: 'pending'." },
+            { name: "approveEkycSubmission() & rejectEkycSubmission()", desc: "Admin duyệt (isVerified = true) hoặc từ chối kèm lý do." }
+          ]
+        },
+        services: [
+          { name: "ekycService", file: "client/src/services/ekycService.ts", desc: "getEkycStatus(), uploadEkycPhoto(), submitEkycRequest(), getAdminEkycList(), approveAdminEkyc(), rejectAdminEkyc()." },
+          { name: "cloudinaryUploadService", file: "client/src/services/cloudinaryUploadService.ts", desc: "Tải ảnh 1-hop vào folder techshare/ekyc (fallback qua /api/ekyc/upload-image)." },
+          { name: "notificationService", file: "server/src/services/notificationService.js", desc: "Gửi thông báo DB + Socket.IO + Push FCM cho user khi Admin duyệt/từ chối." }
+        ],
+        interactions: [
+          "Khi chưa xác thực mà đặt đơn: Trong BookingCreateScreen, người dùng bấm Confirm Booking -> handleConfirm() thấy currentUser.role === 'renter' và !currentUser.isVerified -> bật verifyModalVisible = true hiện ActionConfirmModal (hoặc nếu gọi POST /api/bookings bị bookingController.createBooking() trả 403 RENTER_EKYC_REQUIRED cũng mở modal này) -> bấm Verify Now sẽ gọi onNavigateToVerification() mở EkycVerificationScreen.",
+          "Khi tải trạng thái & bổ sung địa chỉ: EkycVerificationScreen gọi fetchStatus() -> gọi preloadCloudinaryConfig() và ekycService.getEkycStatus() -> gọi ekycController.getMyEkycStatus(). Nếu chưa có địa chỉ (!hasAddress), banner cảnh báo EkycAddressWarningCard hiện lên; bấm cập nhật sẽ mở EkycAddressModal, khi bấm Save thì handleSaveAddress() gọi userService.updateProfile({ address }).",
+          "Khi chọn ảnh CCCD: Người dùng bấm ô ảnh mặt trước/sau -> handlePickImage() mở EkycImagePickerModal (quality: 0.55, exif: false) -> trả URI về handleSelectedUri() -> hiển thị ảnh ngay và gọi ngầm uploadSlotBackground() -> gọi uploadEkycPhoto() (uploadImageWithCloudinary) tải sẵn lên Cloudinary.",
+          "Khi nộp đơn: Bấm Submit -> handleSubmit() kiểm tra địa chỉ, số CCCD 9–12 chữ số và đủ 2 ảnh -> mở EkycConfirmModal -> bấm xác nhận chạy handleConfirmSubmit() chờ ảnh upload xong rồi gọi submitEkycRequest() -> POST /api/ekyc/submit -> ekycController.submitEkycRequest() findOneAndUpdate (upsert: true) vào collection ekyc_requests với status: 'pending'.",
+          "Khi Admin xét duyệt: AdminEkycListScreen chạy fetchSubmissions() gọi getAdminEkycList() (GET /api/admin/ekyc) để hiển thị danh sách.",
+          "Nếu Admin bấm Duyệt: handleApprovePress() mở modal -> handleConfirmApprove() -> approveAdminEkyc() -> ekycController.approveEkycSubmission() đổi status = 'approved', cập nhật User.isVerified = true & 'trust.isVerified': true và gọi createAndSendNotification().",
+          "Nếu Admin bấm Từ chối: handleOpenRejectModal() chọn/nhập lý do -> handleConfirmReject() -> rejectAdminEkyc() -> ekycController.rejectEkycSubmission() đổi status = 'rejected', lưu rejectReason, giữ isVerified = false và gửi thông báo."
+        ],
+        steps: [
+          "Renter chưa xác thực vào màn đặt thiết bị (BookingCreateScreen) và bấm Confirm Booking. Hệ thống chặn lại và hiện ActionConfirmModal nhắc xác thực eKYC; bấm Verify Now để sang màn EkycVerificationScreen.",
+          "Màn hình tải thông tin cá nhân và trạng thái đơn eKYC hiện tại. Nếu thiếu địa chỉ liên hệ, người dùng nhập và lưu địa chỉ ngay tại EkycAddressModal.",
+          "Người dùng nhập số CCCD (9–12 chữ số) và chụp/chọn ảnh CCCD mặt trước, mặt sau; app tự động nén và upload chạy nền lên Cloudinary ngay khi vừa chọn ảnh.",
+          "Người dùng bấm nút gửi, kiểm tra lại thông tin trên modal xác nhận rồi gửi hồ sơ (status: 'pending').",
+          "Admin vào mục eKYC Reviews, mở tab Renter eKYC, phóng to ảnh kiểm tra số CCCD khớp với ảnh chụp rồi bấm Approve (hoặc Reject kèm lý do).",
+          "Khi được Approve, tài khoản chuyển thành isVerified = true, Renter nhận thông báo và có thể đặt thuê thiết bị bình thường. Nếu bị Reject, Renter nhận thông báo lý do và có thể vào màn hình eKYC nộp lại hồ sơ mới."
+        ]
+      },
+      {
+        id: "uc7",
+        code: "UC-07",
+        category: "ekyc",
+        title: "eKYC up to Owner (Nâng cấp Renter lên Chủ thiết bị)",
+        subtitle: "Bổ sung ảnh chân dung cầm CCCD, nâng role thành Owner & nhận event Socket realtime",
+        purpose: "Cho phép tài khoản Renter đã xác thực eKYC nộp thêm hồ sơ xin nâng cấp vai trò lên Owner để được phép đăng tin cho thuê thiết bị trên nền tảng. Điểm khác biệt so với eKYC Renter là hồ sơ yêu cầu thêm ảnh chân dung đang cầm CCCD (selfieWithIdUrl) và được lưu ở collection riêng owner_ekyc_requests. Khi Admin duyệt, hệ thống nâng roleId của tài khoản thành 'owner' và gửi sự kiện Socket.IO để app tự động chuyển sang không gian của Owner ngay lập tức.",
+        files: {
+          client: [
+            "client/src/screens/user/OwnerEkycVerificationScreen.tsx",
+            "client/src/screens/user/ProfileScreen.tsx",
+            "client/src/components/ekyc/EkycSharedSections.tsx",
+            "client/src/components/ekyc/EkycFeedbackModals.tsx",
+            "client/src/screens/admin/AdminEkycListScreen.tsx",
+            "client/src/navigation/RootNavigator.tsx",
+            "client/src/services/socketService.ts",
+            "client/src/services/ekycService.ts",
+            "client/src/services/cloudinaryUploadService.ts",
+            "client/src/services/userService.ts"
+          ],
+          server: [
+            "server/src/routes/ekycRoutes.js",
+            "server/src/routes/adminRoutes.js",
+            "server/src/controllers/ekycController.js",
+            "server/src/models/OwnerEkycRequest.js",
+            "server/src/models/EkycRequest.js",
+            "server/src/models/Account.js",
+            "server/src/models/Role.js",
+            "server/src/models/User.js",
+            "server/src/socket.js",
+            "server/src/services/notificationService.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "OwnerEkycVerificationScreen", desc: "Màn hình nộp đơn nâng cấp Owner (nhập số CCCD, upload CCCD 2 mặt và ảnh selfie cầm CCCD)." },
+            { name: "handlePickPhoto('selfie')", desc: "Bật cameraType: CameraType.front, aspect: [3, 4], quality: 0.5 để chụp selfie." },
+            { name: "RootNavigator.onRoleUpdated", desc: "Lắng nghe sự kiện role_updated từ Socket.IO để chuyển ngay sang giao diện Owner." }
+          ],
+          server: [
+            { name: "submitOwnerEkycRequest()", desc: "Kiểm tra 4 điều kiện và upsert vào owner_ekyc_requests với status: 'pending'." },
+            { name: "approveOwnerEkycSubmission()", desc: "Gán account.roleId = ownerRole._id, phát Socket role_updated và gửi thông báo." },
+            { name: "ensureRoleDocument('owner')", desc: "Tìm hoặc tạo Role 'owner' trong collection roles." },
+            { name: "emitRoleUpdate(user, roleCode)", desc: "Phát sự kiện Socket role_updated tới room user_<user._id> và user_<user.accountId>." }
+          ]
+        },
+        services: [
+          { name: "ekycService", file: "client/src/services/ekycService.ts", desc: "getOwnerEkycStatus(), uploadEkycPhoto(), submitOwnerEkycRequest(), getAdminOwnerEkycList(), approveAdminOwnerEkyc(), rejectAdminOwnerEkyc()." },
+          { name: "cloudinaryUploadService", file: "client/src/services/cloudinaryUploadService.ts", desc: "Tải cả 3 ảnh (CCCD trước, CCCD sau, Selfie cầm CCCD) lên folder techshare/ekyc." },
+          { name: "socketService & socket.js", file: "client & server socket", desc: "Truyền tải realtime sự kiện role_updated khi Admin phê duyệt đơn nâng cấp." }
+        ],
+        interactions: [
+          "Từ ProfileScreen, nếu isUserVerified === true (Renter đã duyệt eKYC), dòng 'Upgrade to Owner (eKYC)' xuất hiện. Khi bấm vào, handleNavigateToOwnerEkyc() gọi navigateWithAddressCheck('OwnerEkycVerification') để mở OwnerEkycVerificationScreen.",
+          "OwnerEkycVerificationScreen chạy fetchStatus() gọi getOwnerEkycStatus() (GET /api/ekyc/owner/status -> ekycController.getMyOwnerEkycStatus()). Nếu user chưa có đơn Owner trước đó, app tự điền sẵn số CCCD từ đơn renterEkyc để tiện cho người dùng.",
+          "Người dùng chọn/chụp 3 ảnh (handlePickPhoto('front' | 'back' | 'selfie')), mỗi ảnh đều tự chạy uploadSlotBackground() -> uploadEkycPhoto().",
+          "Khi bấm Submit, handleSubmit() kiểm tra: phải là Renter đã xác thực (isRenterVerified), có địa chỉ (hasAddress), số CCCD 9–12 số và đủ cả 3 ảnh -> mở EkycConfirmModal -> bấm xác nhận chạy handleConfirmSubmit() đợi upload hoàn tất rồi gọi submitOwnerEkycRequest() (POST /api/ekyc/owner/submit).",
+          "Tại Backend, ekycController.submitOwnerEkycRequest() kiểm tra lại 4 lớp điều kiện, rồi upsert vào OwnerEkycRequest (status: 'pending').",
+          "Khi Admin duyệt ở AdminEkycListScreen: approveAdminOwnerEkyc() -> ekycController.approveOwnerEkycSubmission() cập nhật OwnerEkycRequest.status = 'approved', tìm Role 'owner' qua ensureRoleDocument('owner'), gán account.roleId = ownerRole._id và lưu Account, gọi emitRoleUpdate(user, 'owner') và gọi createAndSendNotification().",
+          "Phía máy Renter đang mở, RootNavigator nhận sự kiện socketService.onRoleUpdated() -> gọi dispatch(updateUser({ role: 'owner' })) + hiện Alert chúc mừng -> useEffect nhận ra isRoleChangeEvent nên tự chạy navigationRef.reset chuyển ngay người dùng vào OwnerDrawerNavigator."
+        ],
+        steps: [
+          "Renter đã xác thực eKYC mở trang Profile và chọn mục Upgrade to Owner (eKYC).",
+          "Màn hình tải trạng thái từ server, điền sẵn số CCCD nếu đã từng làm eKYC Renter, kiểm tra địa chỉ.",
+          "Người dùng tải ảnh CCCD mặt trước, mặt sau và chụp/chọn ảnh chân dung cầm CCCD (camera trước, tỉ lệ 3:4).",
+          "Người dùng xác nhận gửi đơn qua EkycConfirmModal. Hồ sơ được lưu vào owner_ekyc_requests với trạng thái pending.",
+          "Admin mở trang Owner eKYC Reviews, đối chiếu ảnh chân dung cầm CCCD và bấm Approve (hoặc Reject kèm lý do).",
+          "Ngay khi được duyệt, tài khoản đổi role thành owner, người dùng nhận thông báo chúc mừng và ứng dụng tự động chuyển sang giao diện quản lý của Owner."
+        ]
+      },
+      {
+        id: "uc8",
+        code: "UC-08",
+        category: "user",
+        title: "Banned Account User (Khóa / Mở khóa & Thu hồi phiên real-time)",
+        subtitle: "Admin khóa/mở khóa tài khoản, thu hồi phiên ngay qua Socket.IO / HTTP 403",
+        purpose: "Cho phép Admin quản lý danh sách thành viên (Renter & Owner), tìm kiếm/lọc theo vai trò hoặc trạng thái, và thực hiện Khóa tài khoản (Lock) kèm lý do vi phạm hoặc Mở khóa tài khoản (Unlock). Toàn bộ dữ liệu khóa (isActive, lockReason, lockedAt, lockedBy) được lưu tập trung tại duy nhất collection accounts. Khi một tài khoản bị khóa: Nếu người đó đang đăng nhập, phiên làm việc bị ngắt ngay lập tức (real-time qua Socket.IO hoặc ngay ở API tiếp theo qua HTTP 403 ACCOUNT_LOCKED) và hiện modal báo khóa tài khoản kèm lý do. Nếu người đó đăng nhập lại hoặc quên mật khẩu, hệ thống cũng chặn và hiển thị modal tương tự.",
+        files: {
+          client: [
+            "client/src/screens/admin/UserManagementScreen.tsx",
+            "client/src/services/userManagementService.ts",
+            "client/src/navigation/RootNavigator.tsx",
+            "client/src/config/api.ts",
+            "client/src/services/socketService.ts",
+            "client/src/services/logoutService.ts",
+            "client/src/screens/auth/LoginScreen.tsx",
+            "client/src/components/common/ActionFeedbackModals.tsx"
+          ],
+          server: [
+            "server/src/routes/userManagementRoutes.js",
+            "server/src/routes/adminRoutes.js",
+            "server/src/controllers/userManagementController.js",
+            "server/src/middlewares/authMiddleware.js",
+            "server/src/controllers/loginController.js",
+            "server/src/controllers/authController.js",
+            "server/src/controllers/forgotController.js",
+            "server/src/models/Account.js",
+            "server/src/models/User.js",
+            "server/src/socket.js",
+            "server/src/services/notificationService.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "UserManagementScreen.fetchUsers()", desc: "Lấy danh sách người dùng phân trang/tìm kiếm với debounce 400ms." },
+            { name: "handleConfirmLock() & handleExecuteUnlock()", desc: "Admin thực hiện Khóa hoặc Mở khóa tài khoản thành viên." },
+            { name: "RootNavigator.triggerAccountLockedKickOut(rawReason)", desc: "Xóa sạch phiên local, ngắt socket, reset navigation và mở modal báo bị khóa." },
+            { name: "Axios Interceptor trong api.ts", desc: "Tự động phát hiện lỗi 403 ACCOUNT_LOCKED trên mọi request để kích hoạt kickout." }
+          ],
+          server: [
+            { name: "toggleUserStatus()", desc: "Trong userManagementController.js: Cập nhật isActive, lockReason, lockedAt, phát Socket account_locked." },
+            { name: "requireAuth()", desc: "Trong authMiddleware.js: Kiểm tra account.isActive === false ở mọi request để chặn kịp thời." }
+          ]
+        },
+        services: [
+          { name: "userManagementService", file: "client/src/services/userManagementService.ts", desc: "fetchUsersList(), fetchUserDetail(), toggleUserStatus(userId, isActive, reason)." },
+          { name: "logoutService", file: "client/src/services/logoutService.ts", desc: "clearLocalSession(dispatch) (ngắt socket, xóa token Axios, xóa wishlist cache, clearAuth())." },
+          { name: "socketService & socket.js", file: "client & server", desc: "Kênh thời gian thực truyền event account_locked và account_unlocked tới thiết bị user." }
+        ],
+        interactions: [
+          "Khi Admin khóa tài khoản: Admin bấm nút khóa trên thẻ thành viên ở UserManagementScreen -> handleOpenLockModal() mở modal cho chọn/nhập lý do -> bấm xác nhận chạy handleConfirmLock() -> gọi toggleUserStatus(user._id, false, finalReason) gửi PATCH /api/admin/users/:id/status.",
+          "Server chạy userManagementController.toggleUserStatus(): cập nhật Account (isActive: false, lockReason, lockedAt, lockedBy), dùng getIO() phát sự kiện 'account_locked' tới room user_<user._id> và user_<accountId>, đồng thời gọi createAndSendNotification(). Trên máy Admin, UserManagementScreen cập nhật danh sách local thành trạng thái bị khóa và mở ActionResultModal (type='locked').",
+          "Khi thiết bị User nhận lệnh khóa:",
+          "Cách 1 (Real-time): socketService bắt sự kiện 'account_locked' -> báo cho RootNavigator gọi triggerAccountLockedKickOut(data.reason).",
+          "Cách 2 (Qua API HTTP): Bất kỳ lúc nào User gọi API có requireAuth, nếu account.isActive === false thì middleware trả 403 ACCOUNT_LOCKED -> Axios response interceptor trong api.ts bắt được và gọi accountLockedHandler(reason) -> chạy triggerAccountLockedKickOut(reason).",
+          "Hàm triggerAccountLockedKickOut() gọi closeLogoutModal() và clearLocalSession(dispatch) để đăng xuất cưỡng bức -> RootNavigator reset stack về Home -> sau 220ms hiện ActionResultModal (type='locked') kèm lý do khóa.",
+          "Khi Admin mở khóa tài khoản: Admin bấm nút mở khóa -> handleConfirmUnlock() mở ActionConfirmModal -> Admin xác nhận chạy handleExecuteUnlock() -> gọi toggleUserStatus(user._id, true) -> server cập nhật Account (isActive: true, xóa lockReason), phát socket 'account_unlocked' và Admin thấy ActionResultModal xanh báo thành công."
+        ],
+        steps: [
+          "Admin vào màn User Management, tìm kiếm hoặc lọc user cần xử lý.",
+          "Để khóa tài khoản, Admin bấm nút khóa, chọn hoặc nhập lý do vi phạm rồi xác nhận. Server lưu thông tin khóa vào accounts, đẩy thông báo và bắn Socket account_locked.",
+          "Nếu user đó đang mở app trên điện thoại, ứng dụng lập tức ngắt kết nối Socket, xóa JWT token, đưa về màn hình Guest/Home và bật popup màu đỏ thông báo lý do bị khóa.",
+          "Nếu user cố tình đăng nhập lại tại LoginScreen hoặc bấm Quên mật khẩu, loginController / forgotController đều kiểm tra account.isActive === false để chặn và hiển thị modal khóa tài khoản.",
+          "Khi Admin muốn mở khóa, Admin bấm nút Unlock, xác nhận qua modal ActionConfirmModal, server đặt lại isActive: true và xóa lý do khóa để user có thể đăng nhập lại bình thường."
+        ]
+      },
+      {
+        id: "uc9",
+        code: "UC-09",
+        category: "user",
+        title: "Change Avatar (Đổi ảnh đại diện tối ưu tốc độ cao)",
+        subtitle: "Optimistic UI, Upload 1-hop Cloudinary qua XMLHttpRequest (tránh lỗi Expo fetch)",
+        purpose: "Cho phép người dùng cập nhật ảnh đại diện cá nhân bằng cách chụp ảnh mới (mở camera trước, khung cắt ảnh hình tròn/oval 1:1) hoặc chọn ảnh từ thư viện. Luồng này được tối ưu tốc độ tối đa bằng cách nén ảnh nhẹ trên điện thoại, hiển thị trước ảnh mới ngay lập tức (Optimistic UI), tải thẳng 1 chặng (1-hop) lên Cloudinary CDN qua XMLHttpRequest (tránh lỗi FormData của Expo fetch) kèm cơ chế tự fallback qua server nếu lỗi, và dùng biến đổi URL Cloudinary để hiển thị ảnh nhẹ nhanh hơn.",
+        files: {
+          client: [
+            "client/src/screens/user/ProfileScreen.tsx",
+            "client/src/components/common/ImageSourcePickerModal.tsx",
+            "client/src/services/userService.ts",
+            "client/src/services/cloudinaryUploadService.ts",
+            "client/src/components/common/ActionFeedbackModals.tsx",
+            "client/src/store/slices/authSlice.ts",
+            "client/src/constants/strings.ts"
+          ],
+          server: [
+            "server/src/routes/authRoutes.js",
+            "server/src/middlewares/authMiddleware.js",
+            "server/src/middlewares/uploadMiddleware.js",
+            "server/src/controllers/authController.js",
+            "server/src/utils/cloudinary.js",
+            "server/src/models/User.js"
+          ]
+        },
+        functions: {
+          client: [
+            { name: "handleOpenAvatarPicker(fromEditModal)", desc: "Mở modal chọn nguồn ảnh (nếu từ edit modal thì đóng edit modal trước 180ms)." },
+            { name: "handleUploadSelectedAvatar(localUri)", desc: "Thực hiện Optimistic UI, gọi uploadAvatar và hoàn tác nếu lỗi." },
+            { name: "ImageSourcePickerModal", desc: "Modal Soft-UI hỗ trợ launchCamera() và launchGallery() (quality: 0.45, cropShape: 'oval')." },
+            { name: "uploadImageWithCloudinary()", desc: "Upload direct 1-hop 12s timeout, tự chuyển fallback server 35s nếu lỗi." },
+            { name: "optimizeCloudinaryUrl(url, 300)", desc: "Tự động chèn f_auto,q_auto,w_300,c_limit vào URL Cloudinary." }
+          ],
+          server: [
+            { name: "getCloudinaryConfig()", desc: "Cung cấp cloudName và uploadPreset từ server/.env." },
+            { name: "updateMe()", desc: "Lưu URL avatar mới khi upload 1-hop thành công qua PUT /api/auth/me." },
+            { name: "updateAvatar() & uploadToCloudinary()", desc: "Nhận file khi fallback qua server, đẩy lên Cloudinary folder techshare/avatars và lưu DB." }
+          ]
+        },
+        services: [
+          { name: "cloudinaryUploadService", file: "client/src/services/cloudinaryUploadService.ts", desc: "Dùng axios.create() chạy trên XMLHttpRequest của React Native (gửi file {uri, name, type} mượt mà), preloadCloudinaryConfig(), optimizeCloudinaryUrl()." },
+          { name: "userService", file: "client/src/services/userService.ts", desc: "uploadAvatar(uri) và updateProfile({ avatar })." }
+        ],
+        interactions: [
+          "Ngay khi người dùng mở trang Profile, fetchFreshProfile() gọi sẵn preloadCloudinaryConfig() để tải và cache cấu hình Cloudinary từ EXPO_PUBLIC_CLOUDINARY_* hoặc GET /api/auth/cloudinary-config.",
+          "Khi người dùng chạm vào ảnh đại diện (handleOpenAvatarPicker(false)) hoặc bấm đổi ảnh trong Edit Modal (handleOpenAvatarPicker(true) — hàm này đóng Edit Modal rồi đợi 180ms mới mở picker để tránh kẹt modal trên iOS), ImageSourcePickerModal hiện lên.",
+          "Người dùng chọn Camera hoặc Thư viện -> handleSelectSource() đóng modal chọn, đợi 180ms rồi gọi launchCamera() hoặc launchGallery() để xin quyền và mở trình chụp/chọn ảnh đã bật sẵn nén nhẹ (quality: 0.45, exif: false, cropShape: 'oval').",
+          "Sau khi chọn xong ảnh, onSelected(uri) gọi handleUploadSelectedAvatar(localUri): Hàm lưu URL ảnh cũ vào avatarBeforeUploadRef.current, gán ngay localUri vào state profile.avatar (Optimistic UI giúp người dùng thấy ảnh mới ngay lập tức, kèm vòng loading overlay trên avatar).",
+          "Sau đó gọi userService.uploadAvatar(localUri) -> gọi uploadImageWithCloudinary() (folder: 'techshare/avatars', fallbackEndpoint: '/auth/me/avatar', fallbackFieldName: 'avatar').",
+          "uploadImageWithCloudinary() ưu tiên đóng gói FormData bằng createImageFormData() và gửi thẳng cloudinaryClient.post lên Cloudinary API (usedFallback: false). Khi nhận secure_url, userService.uploadAvatar() gọi thêm PUT /api/auth/me { avatar: result.url } vào authController.updateMe() để lưu URL vào MongoDB.",
+          "Nếu upload trực tiếp thất bại, uploadImageWithCloudinary() tự chuyển sang gọi apiClient.post('/auth/me/avatar', ...) -> qua uploadFlexibleImage() -> vào authController.updateAvatar() -> gọi uploadToCloudinary() đẩy lên Cloudinary và lưu DB (usedFallback: true).",
+          "Khi upload xong: handleUploadSelectedAvatar() cập nhật URL chuẩn vào profile, gọi dispatch(updateUser({ avatar })) và mở ActionResultModal báo thành công. Trên giao diện, ảnh được truyền qua optimizeCloudinaryUrl(profile.avatar, 300) để tự động chèn f_auto,q_auto,w_300,c_limit. Nếu có lỗi mạng/server, hàm tự hoàn tác profile.avatar về avatarBeforeUploadRef.current và hiện modal báo lỗi."
+        ],
+        steps: [
+          "Khi vừa mở màn Profile, app âm thầm tải trước cấu hình Cloudinary để chuẩn bị sẵn cho bước upload.",
+          "Người dùng bấm vào biểu tượng camera trên ảnh đại diện (hoặc bấm nút đổi ảnh trong Edit Profile).",
+          "Modal chọn nguồn ảnh hiện ra với 2 tùy chọn: Take New Photo (Chụp mới) hoặc Choose from Gallery (Chọn từ thư viện).",
+          "Người dùng cấp quyền (nếu lần đầu), chụp/chọn ảnh và cắt khung tròn 1:1. App tự nén ảnh nhẹ (quality: 0.45, bỏ exif).",
+          "Ảnh vừa chọn hiển thị ngay lập tức trên khung đại diện (Optimistic UI) trong lúc app đẩy file thẳng lên Cloudinary CDN trong 1 bước.",
+          "Nếu đẩy thẳng thành công, app gọi PUT /api/auth/me để lưu link ảnh mới vào collection users; nếu mạng lỗi bước đẩy thẳng, app tự động chuyển sang gửi qua endpoint dự phòng /api/auth/me/avatar trên Backend để đẩy lên Cloudinary và lưu DB.",
+          "Hệ thống cập nhật ảnh đại diện mới vào Redux và hiện modal thông báo đổi avatar thành công (hoặc tự trả về ảnh cũ và báo lỗi nếu thất bại)."
+        ]
+      }
+    ];
+
+    // -------------------------------------------------------------
+    // INITIALIZATION & DOM RENDERING
+    // -------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNavMenu(useCasesData);
+      renderUseCases(useCasesData);
+      setupSearchAndFilters();
+      setupMobileDrawer();
+    });
+
+    // -------------------------------------------------------------
+    // RENDER SIDEBAR MENU
+    // -------------------------------------------------------------
+    function renderNavMenu(items) {
+      const navContainer = document.getElementById('navMenuList');
+      navContainer.innerHTML = items.map(item => `
+        <a href="#${item.id}" data-id="${item.id}" class="nav-item group flex items-center px-3 py-2.5 text-xs rounded-xl font-medium text-slate-400 hover:text-white hover:bg-slate-900 transition-all duration-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-700 group-hover:bg-cyan-400 mr-2.5 transition-colors"></span>
+          <span class="font-mono text-cyan-400/80 mr-1.5 font-bold">${item.code}</span>
+          <span class="truncate flex-1">${item.title.split('(')[0]}</span>
+        </a>
+      `).join('');
+    }
+
+    // -------------------------------------------------------------
+    // RENDER MAIN USE CASES CONTENT
+    // -------------------------------------------------------------
+    function renderUseCases(items) {
+      const container = document.getElementById('usecaseContainer');
+      
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="glass-panel rounded-2xl p-12 text-center space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-slate-400 text-2xl">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-200">Không tìm thấy kết quả phù hợp</h3>
+            <p class="text-slate-400 text-sm max-w-md mx-auto">Vui lòng thử tìm kiếm từ khóa khác hoặc xóa bộ lọc tìm kiếm hiện tại.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map(uc => `
+        <article id="${uc.id}" class="usecase-card glass-panel rounded-2xl p-5 sm:p-7 border border-slate-800 space-y-6 glow-effect transition-all duration-300">
+          
+          <!-- Card Header -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-800/80">
+            <div class="space-y-1">
+              <div class="flex items-center space-x-2">
+                <span class="px-2.5 py-0.5 rounded-md bg-cyan-950 text-cyan-400 border border-cyan-800 text-xs font-mono font-bold">${uc.code}</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-indigo-950 text-indigo-300 border border-indigo-800 text-xs font-mono capitalize">${uc.category} module</span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight pt-1">${uc.title}</h2>
+              <p class="text-xs sm:text-sm text-cyan-400 font-medium">${uc.subtitle}</p>
+            </div>
+            <div class="flex items-center space-x-2 self-start md:self-center">
+              <button onclick="copyUseCaseSummary('${uc.id}')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium flex items-center space-x-1.5 border border-slate-700/60 transition">
+                <i class="fa-regular fa-copy"></i>
+                <span>Sao chép tóm tắt</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabs Navigation within Card -->
+          <div class="border-b border-slate-800">
+            <div class="flex space-x-4 overflow-x-auto text-xs sm:text-sm font-medium" id="tabs-${uc.id}">
+              <button onclick="switchTab('${uc.id}', 'overview')" class="tab-btn active-tab pb-2.5 text-cyan-400 border-b-2 border-cyan-400 font-semibold whitespace-nowrap flex items-center space-x-2">
+                <i class="fa-solid fa-bullseye"></i>
+                <span>1. Mục đích</span>
+              </button>
+              <button onclick="switchTab('${uc.id}', 'files')" class="tab-btn pb-2.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent whitespace-nowrap flex items-center space-x-2">
+                <i class="fa-solid fa-folder-tree"></i>
+                <span>2. Files liên quan</span>
+              </button>
+              <button onclick="switchTab('${uc.id}', 'functions')" class="tab-btn pb-2.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent whitespace-nowrap flex items-center space-x-2">
+                <i class="fa-solid fa-code"></i>
+                <span>3. Hàm chính & Services</span>
+              </button>
+              <button onclick="switchTab('${uc.id}', 'interactions')" class="tab-btn pb-2.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent whitespace-nowrap flex items-center space-x-2">
+                <i class="fa-solid fa-diagram-project"></i>
+                <span>4. Chi tiết Tương tác</span>
+              </button>
+              <button onclick="switchTab('${uc.id}', 'steps')" class="tab-btn pb-2.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent whitespace-nowrap flex items-center space-x-2">
+                <i class="fa-solid fa-list-check"></i>
+                <span>5. Luồng hoạt động (Stepper)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT PANELS -->
+          <div class="tab-contents">
+            
+            <!-- PANEL 1: PURPOSE & OVERVIEW -->
+            <div id="panel-${uc.id}-overview" class="tab-panel space-y-4">
+              <div class="bg-slate-900/60 rounded-xl p-4 sm:p-5 border border-slate-800/80 leading-relaxed text-sm text-slate-300">
+                <h4 class="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-2 font-semibold">Mục đích Use Case:</h4>
+                <p>${uc.purpose}</p>
+              </div>
+            </div>
+
+            <!-- PANEL 2: RELATED FILES -->
+            <div id="panel-${uc.id}-files" class="tab-panel hidden space-y-4">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                
+                <!-- Client Files -->
+                <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800">
+                  <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+                    <span class="text-xs font-mono font-bold text-sky-400 flex items-center space-x-2">
+                      <i class="fa-mobile-screen-button"></i>
+                      <span>Phía Client (App React Native)</span>
+                    </span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">${uc.files.client.length} files</span>
+                  </div>
+                  <ul class="space-y-1.5 font-mono text-xs">
+                    ${uc.files.client.map(file => `
+                      <li class="flex items-center justify-between group p-1.5 rounded hover:bg-slate-800/60 transition">
+                        <span class="text-slate-300 truncate mr-2" title="${file}">${file}</span>
+                        <button onclick="copyToClipboard('${file}')" class="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-cyan-400 transition" title="Copy File Path">
+                          <i class="fa-regular fa-copy"></i>
+                        </button>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+
+                <!-- Server Files -->
+                <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800">
+                  <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+                    <span class="text-xs font-mono font-bold text-indigo-400 flex items-center space-x-2">
+                      <i class="fa-server"></i>
+                      <span>Phía Server (Backend Node.js/Express)</span>
+                    </span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">${uc.files.server.length} files</span>
+                  </div>
+                  <ul class="space-y-1.5 font-mono text-xs">
+                    ${uc.files.server.map(file => `
+                      <li class="flex items-center justify-between group p-1.5 rounded hover:bg-slate-800/60 transition">
+                        <span class="text-slate-300 truncate mr-2" title="${file}">${file}</span>
+                        <button onclick="copyToClipboard('${file}')" class="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-indigo-400 transition" title="Copy File Path">
+                          <i class="fa-regular fa-copy"></i>
+                        </button>
+                      </li>
+                    `).join('')}
+                  </ul>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- PANEL 3: FUNCTIONS & SERVICES -->
+            <div id="panel-${uc.id}-functions" class="tab-panel hidden space-y-6">
+              
+              <!-- Client Functions -->
+              <div class="space-y-3">
+                <h4 class="text-xs font-mono uppercase font-semibold text-sky-400 flex items-center space-x-2">
+                  <i class="fa-solid fa-code"></i>
+                  <span>Hàm chính trên Client</span>
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  ${uc.functions.client.map(fn => `
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 space-y-1">
+                      <code class="text-xs font-mono text-cyan-300 font-bold block">${fn.name}</code>
+                      <p class="text-xs text-slate-400">${fn.desc}</p>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Server Functions -->
+              <div class="space-y-3">
+                <h4 class="text-xs font-mono uppercase font-semibold text-indigo-400 flex items-center space-x-2">
+                  <i class="fa-solid fa-gears"></i>
+                  <span>Hàm chính trên Server</span>
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  ${uc.functions.server.map(fn => `
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 space-y-1">
+                      <code class="text-xs font-mono text-indigo-300 font-bold block">${fn.name}</code>
+                      <p class="text-xs text-slate-400">${fn.desc}</p>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Services Used -->
+              <div class="space-y-3 pt-2">
+                <h4 class="text-xs font-mono uppercase font-semibold text-emerald-400 flex items-center space-x-2">
+                  <i class="fa-solid fa-plug"></i>
+                  <span>Các Services của Use Case</span>
+                </h4>
+                <div class="space-y-2">
+                  ${uc.services.map(srv => `
+                    <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div class="space-y-0.5">
+                        <span class="text-xs font-bold text-slate-200 font-mono">${srv.name}</span>
+                        <p class="text-xs text-slate-400">${srv.desc}</p>
+                      </div>
+                      <code class="text-[11px] font-mono text-cyan-400 bg-slate-950 px-2 py-1 rounded border border-slate-800 self-start sm:self-center">${srv.file}</code>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+            </div>
+
+            <!-- PANEL 4: DETAILED INTERACTIONS -->
+            <div id="panel-${uc.id}-interactions" class="tab-panel hidden space-y-4">
+              <div class="bg-slate-900/60 rounded-xl p-4 sm:p-5 border border-slate-800 space-y-3 text-sm text-slate-300">
+                <h4 class="text-xs font-mono uppercase font-semibold text-cyan-400">Tương Tác và Luồng Gọi Hàm (Detailed Call Flow):</h4>
+                <div class="space-y-3">
+                  ${uc.interactions.map((stepText, idx) => `
+                    <div class="flex items-start space-x-3 p-3 rounded-lg bg-slate-950/60 border border-slate-800/60">
+                      <span class="w-6 h-6 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800 flex items-center justify-center text-xs font-mono font-bold flex-shrink-0 mt-0.5">${idx + 1}</span>
+                      <p class="text-xs sm:text-sm leading-relaxed">${stepText}</p>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <!-- PANEL 5: STEPPER TIMELINE FLOWCHART -->
+            <div id="panel-${uc.id}-steps" class="tab-panel hidden space-y-4">
+              <div class="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-3 sm:before:left-4 before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-cyan-500 before:via-indigo-500 before:to-slate-800">
+                ${uc.steps.map((step, idx) => `
+                  <div class="relative group">
+                    <!-- Circle Node -->
+                    <div class="absolute -left-6 sm:-left-8 top-1 w-6 h-6 rounded-full bg-slate-950 border-2 border-cyan-400 group-hover:border-indigo-400 flex items-center justify-center text-[10px] font-mono font-bold text-cyan-300 transition-colors shadow-lg shadow-cyan-500/20">
+                      ${idx + 1}
+                    </div>
+                    <!-- Step Box -->
+                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800/80 group-hover:border-slate-700 transition">
+                      <div class="flex items-center space-x-2 text-xs font-mono font-semibold text-cyan-400 mb-1">
+                        <span>Bước ${idx + 1}</span>
+                      </div>
+                      <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">${step}</p>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+      `).join('');
+    }
+
+    // -------------------------------------------------------------
+    // TAB SWITCHING LOGIC
+    // -------------------------------------------------------------
+    function switchTab(usecaseId, tabName) {
+      const card = document.getElementById(usecaseId);
+      if (!card) return;
+
+      // Update button styling
+      const buttons = card.querySelectorAll(`#tabs-${usecaseId} .tab-btn`);
+      buttons.forEach(btn => {
+        btn.classList.remove('active-tab', 'text-cyan-400', 'border-cyan-400', 'font-semibold');
+        btn.classList.add('text-slate-400', 'border-transparent');
+      });
+      
+      event.currentTarget.classList.add('active-tab', 'text-cyan-400', 'border-cyan-400', 'font-semibold');
+      event.currentTarget.classList.remove('text-slate-400', 'border-transparent');
+
+      // Hide all panels, show selected
+      const panels = card.querySelectorAll('.tab-panel');
+      panels.forEach(panel => panel.classList.add('hidden'));
+
+      const targetPanel = document.getElementById(`panel-${usecaseId}-${tabName}`);
+      if (targetPanel) {
+        targetPanel.classList.remove('hidden');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // SEARCH & FILTER LOGIC
+    // -------------------------------------------------------------
+    function setupSearchAndFilters() {
+      const searchInput = document.getElementById('searchInput');
+      const mobileSearchInput = document.getElementById('mobileSearchInput');
+      const clearBtn = document.getElementById('clearSearchBtn');
+      const categoryButtons = document.querySelectorAll('.cat-filter-btn');
+
+      let currentFilter = 'all';
+      let currentQuery = '';
+
+      function filterData() {
+        let filtered = useCasesData;
+
+        // Apply category filter
+        if (currentFilter !== 'all') {
+          filtered = filtered.filter(item => item.category === currentFilter);
+        }
+
+        // Apply text search
+        if (currentQuery.trim() !== '') {
+          const q = currentQuery.toLowerCase().trim();
+          filtered = filtered.filter(item => {
+            const inTitle = item.title.toLowerCase().includes(q);
+            const inPurpose = item.purpose.toLowerCase().includes(q);
+            const inFilesClient = item.files.client.some(f => f.toLowerCase().includes(q));
+            const inFilesServer = item.files.server.some(f => f.toLowerCase().includes(q));
+            const inFuncsClient = item.functions.client.some(fn => fn.name.toLowerCase().includes(q) || fn.desc.toLowerCase().includes(q));
+            const inFuncsServer = item.functions.server.some(fn => fn.name.toLowerCase().includes(q) || fn.desc.toLowerCase().includes(q));
+            
+            return inTitle || inPurpose || inFilesClient || inFilesServer || inFuncsClient || inFuncsServer;
+          });
+        }
+
+        renderNavMenu(filtered);
+        renderUseCases(filtered);
+
+        // Highlight matching terms if search query exists
+        if (currentQuery.trim() !== '') {
+          highlightSearchTerms(currentQuery.trim());
+        }
+      }
+
+      // Input Listeners
+      searchInput.addEventListener('input', (e) => {
+        currentQuery = e.target.value;
+        mobileSearchInput.value = currentQuery;
+        clearBtn.classList.toggle('hidden', currentQuery === '');
+        filterData();
+      });
+
+      mobileSearchInput.addEventListener('input', (e) => {
+        currentQuery = e.target.value;
+        searchInput.value = currentQuery;
+        filterData();
+      });
+
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        mobileSearchInput.value = '';
+        currentQuery = '';
+        clearBtn.classList.add('hidden');
+        filterData();
+      });
+
+      // Category Filter Buttons
+      categoryButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          categoryButtons.forEach(b => {
+            b.className = "cat-filter-btn px-2.5 py-1 text-xs rounded-md bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800 font-medium transition";
+          });
+          btn.className = "cat-filter-btn px-2.5 py-1 text-xs rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-medium transition";
+          currentFilter = btn.getAttribute('data-filter');
+          filterData();
+        });
+      });
+
+      // Expand / Collapse All Steps Toggle
+      let allExpanded = false;
+      document.getElementById('expandAllBtn').addEventListener('click', () => {
+        allExpanded = !allExpanded;
+        useCasesData.forEach(uc => {
+          switchTab(uc.id, allExpanded ? 'steps' : 'overview');
+        });
+        showToast(allExpanded ? "Đã mở Tab Luồng Hoạt Động cho tất cả Use Cases" : "Đã thu gọn về Tab Tổng Quan");
+      });
+    }
+
+    // -------------------------------------------------------------
+    // SEARCH HIGHLIGHTER
+    // -------------------------------------------------------------
+    function highlightSearchTerms(query) {
+      const container = document.getElementById('usecaseContainer');
+      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+
+      function walkNodes(node) {
+        if (node.nodeType === 3) {
+          const val = node.nodeValue;
+          if (regex.test(val)) {
+            const span = document.createElement('span');
+            span.innerHTML = val.replace(regex, '<mark class="search-highlight">$1</mark>');
+            node.parentNode.replaceChild(span, node);
+          }
+        } else if (node.nodeType === 1 && !['SCRIPT', 'STYLE', 'BUTTON', 'INPUT'].includes(node.tagName)) {
+          Array.from(node.childNodes).forEach(walkNodes);
+        }
+      }
+
+      walkNodes(container);
+    }
+
+    // -------------------------------------------------------------
+    // MOBILE DRAWER MENU LOGIC
+    // -------------------------------------------------------------
+    function setupMobileDrawer() {
+      const menuBtn = document.getElementById('mobileMenuBtn');
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+
+      function toggleDrawer() {
+        sidebar.classList.toggle('-translate-x-full');
+        backdrop.classList.toggle('hidden');
+      }
+
+      menuBtn.addEventListener('click', toggleDrawer);
+      backdrop.addEventListener('click', toggleDrawer);
+
+      // Close sidebar when clicking a nav item on mobile
+      document.getElementById('navMenuList').addEventListener('click', (e) => {
+        if (e.target.closest('a')) {
+          if (window.innerWidth < 1024) {
+            toggleDrawer();
+          }
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // UTILITY: CLIPBOARD & TOAST
+    // -------------------------------------------------------------
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(`Đã chép: ${text}`);
+        });
+      } else {
+        const input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showToast(`Đã chép: ${text}`);
+      }
+    }
+
+    function copyUseCaseSummary(ucId) {
+      const uc = useCasesData.find(u => u.id === ucId);
+      if (!uc) return;
+      const text = `${uc.code} - ${uc.title}\n\nMục đích:\n${uc.purpose}\n\nClient Files:\n${uc.files.client.join('\n')}\n\nServer Files:\n${uc.files.server.join('\n')}`;
+      copyToClipboard(text);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+  </script>
+
+</body>
+</html>
